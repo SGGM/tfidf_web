@@ -165,3 +165,4 @@ cython_debug/
 mediafiles/
 *.jpg
 media/
+*/media
