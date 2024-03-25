@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Загрузка текстового файла</title>
+</head>
+<body>
+    <h2>Страница для загрузки текстового файла</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Загрузить</button>
+    </form>
+
+    {% if res %}
+    <h3>Таблица из слов загруженного текстового файла с максимальным показателем <a href="https://ru.wikipedia.org/wiki/TF-IDF">IDF<a/></h3>
+    <table>
+        <tr><th>Слово</th><th>TF</th><th>IDF</th></tr>
+        {% for triplet in res %}
+            <tr><td>{{ triplet.0 }}</td><td>{{ triplet.1 }}</td><td>{{ triplet.2 }}</td></tr>
+        {% empty %}
+            <tr>Текст не загружен</tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+</body>
+</html>

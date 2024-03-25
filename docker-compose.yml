@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+    nginx:
+        restart: always
+        image: nginx:1.24-alpine
+        ports:
+            - 80:80
+        volumes:
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - static_volume:/app/tfidf_web/django-static
+    server:
+        restart: unless-stopped
+        build:
+            context: .
+            dockerfile: ./docker/tfidf_web/Dockerfile
+        entrypoint: /app/docker/tfidf_web/server-entrypoint.sh
+        volumes:
+            - static_volume:/app/tfidf_web/django_static
+        expose:
+            - 8000     
+        environment:
+            DEBUG: "True"
+            # CELERY_BROKER_URL: "redis://redis:6379/0"
+            # CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+            DJANGO_DB: postgresql
+            POSTGRES_HOST: db
+            POSTGRES_NAME: tfidf_postgres
+            POSTGRES_USER: tfidf_postgres_user
+            POSTGRES_PASSWORD: tfidf_postgres_password
+            POSTGRES_PORT: 5432
+    db:
+        image: postgres:13.0-alpine
+        restart: unless-stopped
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        environment:
+            POSTGRES_DB: tfidf_postgres
+            POSTGRES_USER: tfidf_postgres_user
+            POSTGRES_PASSWORD: tfidf_postgres_password
+        expose:
+            - 5432
+    
+volumes:
+    static_volume: {}
+    postgres_data: {}
