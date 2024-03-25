@@ -16,9 +16,9 @@ def upload_file(request):
             with open(os.path.join(settings.BASE_DIR, f"media/{obj.file}"), encoding="utf-8") as f:
                 res = " ".join([line.strip() for line in f])
 
-            preprocessed_lst = preprocessing(res)
-            a, b, c = tf_idf_calculation(preprocessed_lst)
-            res = present_results(a, b, c)
+            preprocessed_lst = preprocessing(res)                              # предобработка текстового файла
+            words, array_tf, array_idf = tf_idf_calculation(preprocessed_lst)  # рассчет tf, idf, а также словаря слов в тексте
+            res = present_results(words, array_tf, array_idf)                  # вывод результатов в виде списка кортежей
 
             form = UploadFileForm()
 
