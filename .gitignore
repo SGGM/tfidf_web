@@ -166,3 +166,4 @@ mediafiles/
 *.jpg
 media/
 */media
+.flake8
